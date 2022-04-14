@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加载Bing Map图层</title>
+    <!-- css文件夹中包含了ol.css文件，它是样式库，包含了Openlayers的所有默认样式信息 -->
+    <link rel="stylesheet" href="../v6.13.0//css/ol.css">
+    <!-- build文件夹中包含了ol.js文件，他是Openlayers的核心开发库，集成了Openlayers的所有功能 -->
+    <script src="../v6.13.0/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        let map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({                 // 加载Bing Map图层
+                    source: new ol.source.BingMaps({
+                        key: 'AoKyR_ccmz5_2pHWQAs857ixn-scaZqJY-WCwI92aNK4crllQ6Jbc8IkOzYL3z94',    // 可以自行到Bing Map官网申请key
+                        imagerySet: 'AerialWithLabels',// 指定加载的图层名，还可以替换为'Aerial'或'Road'
+                    }),
+                }),
+            ],
+            view: new ol.View({ // 地图视图
+                center: [0, 0],
+                zoom: 3
+            })
+        });
+    </script>
+</body>
+
+</html>

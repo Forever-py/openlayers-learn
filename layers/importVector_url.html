@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通过url加载矢量数据</title>
+    <!-- css文件夹中包含了ol.css文件，它是样式库，包含了Openlayers的所有默认样式信息 -->
+    <link rel="stylesheet" href="../v6.13.0//css/ol.css">
+    <!-- build文件夹中包含了ol.js文件，他是Openlayers的核心开发库，集成了Openlayers的所有功能 -->
+    <script src="../v6.13.0/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        // 创建地图
+        let map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({             // 底图
+                    source: new ol.source.OSM()
+                }),
+                // 再加载一个geojson的矢量地图
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: './data/tianjin.json',                // 矢量数据来源
+                        format: new ol.format.GeoJSON()                 // 解析矢量数据的解析器
+                    }),
+                    style: new ol.style.Style({                            // 自定义矢量地图样式
+                        stroke: new ol.style.Stroke({
+                            color: 'red',
+                            width: 1
+                        })
+                    })
+                })
+            ],
+            view: new ol.View({
+                center: [0, 0],
+                zoom: 0
+            })
+        });
+    </script>
+</body>
+
+</html>

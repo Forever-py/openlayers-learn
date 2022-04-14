@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenLayers默认使用的分辨率</title>
+    <!-- css文件夹中包含了ol.css文件，它是样式库，包含了Openlayers的所有默认样式信息 -->
+    <link rel="stylesheet" href="../v6.13.0//css/ol.css">
+    <!-- build文件夹中包含了ol.js文件，他是Openlayers的核心开发库，集成了Openlayers的所有功能 -->
+    <script src="../v6.13.0/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div><span>当前层级：</span><span id="zoom"></span><span>分辨率：</span><span id="resolution"></span></div>
+
+    <script>
+        let map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({                 // 加载OpenStreetMap图层
+                    source: new ol.source.OSM(),
+                }),
+            ],
+            view: new ol.View({ // 地图视图
+                center: ol.proj.transform([104, 30], 'EPSG:4326', 'EPSG:3857'),
+                zoom: 10
+            })
+        });
+        // 监听层级变化，输出当前层级和分辨率
+        map.getView().on('change:resolution', function () {
+            document.getElementById('zoom').innerHTML = this.getZoom() + '，';
+            document.getElementById('resolution').innerHTML = this.getResolution();
+        })
+
+        document.getElementById('zoom').innerHTML = map.getView().getZoom() + '，';
+        document.getElementById('resolution').innerHTML = + map.getView().getResolution();
+    </script>
+</body>
+
+</html>

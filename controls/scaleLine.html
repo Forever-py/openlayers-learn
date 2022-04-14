@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- css文件夹中包含了ol.css文件，它是样式库，包含了Openlayers的所有默认样式信息 -->
+    <link rel="stylesheet" href="../v6.13.0//css/ol.css">
+    <!-- build文件夹中包含了ol.js文件，他是Openlayers的核心开发库，集成了Openlayers的所有功能 -->
+    <script src="../v6.13.0/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 地图容器 -->
+    <div id="map"></div>
+    <script>
+        let map = new ol.Map({ // 生成一个地图容器对象
+            target: "map", // 关联到对应的div容器
+            layers: [
+                new ol.layer.Tile({
+                    // 瓦片地图
+                    source: new ol.source.OSM(), // OpenStreetMap数据来源(一个开放数据源的免费地图)
+                }),
+            ],
+            view: new ol.View({
+                // 地图视图
+                projection: "EPSG:3857", //空间参考系统
+                center: [0, 0], // 地图视图中心点
+                zoom: 0, // 缩放级别
+            }),
+            controls: ol.control.defaults().extend([
+                new ol.control.ScaleLine({
+                    units: 'metric', // 比例尺默认单位
+                }),
+            ])
+        });
+    </script>
+</body>
+
+</html>

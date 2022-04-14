@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draw Shapes</title>
+    <!-- css文件夹中包含了ol.css文件，它是样式库，包含了Openlayers的所有默认样式信息 -->
+    <link rel="stylesheet" href="../v6.13.0//css/ol.css">
+    <!-- build文件夹中包含了ol.js文件，他是Openlayers的核心开发库，集成了Openlayers的所有功能 -->
+    <script src="../v6.13.0/build/ol.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+            background-color: rgba(134, 199, 243, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <label>Shape type &nbsp;</label>
+    <select id="type">
+        <option value="None">None</option>
+        <option value="Point">Point</option>
+        <option value="LineString">LineString</option>
+        <option value="Polygon">Polygon</option>
+        <option value="Circle">Circle</option>
+        <option value="Square">Square</option>
+        <option value="Box">Box</option>
+    </select>
+    <script>
+        let vectorSource = new ol.source.Vector();
+        let vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+        let map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Vector({
+                    source: new ol.source.Vector({
+                        url: 'https://geo.datav.aliyun.com/areas_v3/bound/120000_full.json',                // 矢量数据来源
+                        format: new ol.format.GeoJSON()                 // 解析矢量数据的解析器
+                    }),
+                    style: new ol.style.Style({                            // 自定义矢量地图样式
+                        stroke: new ol.style.Stroke({ // 边界
+                            color: 'blue', // 边界颜色
+                            width: 1  // 边界线颜色
+                        }),
+                        fill: new ol.style.Fill({
+                            color: "#4e98f444", //填充颜色
+                        }),
+                    })
+                }),
+                vectorLayer
+            ],
+            view: new ol.View({ // 地图视图
+                projection: 'EPSG:3857',
+                center: [13064615.064762281, 4826266.67792139],
+                zoom: 8
+            })
+        })
+        let typeSelect = document.getElementById('type');
+        let draw;
+        function addInteraction() {
+            let type = typeSelect.value;
+            if (type !== 'None') {
+                let geometryFunction;
+                switch (type) {
+                    case "Square":
+                        type = "Circle";
+                        // 生成规则的四边形的图形函数
+                        geometryFunction = ol.interaction.Draw.createRegularPolygon(4);
+                        break;
+                    case 'Box':
+                        type = 'Circle';
+                        // 生成盒形状的图形函数
+                        geometryFunction = ol.interaction.Draw.createBox();
+                        break;
+                    default: break;
+                }
+
+                console.log(geometryFunction)
+                // 初始化Draw绘图控件
+                draw = new ol.interaction.Draw({
+                    source: vectorSource,
+                    type: type,
+                    geometryFunction: geometryFunction
+                });
+                // 将Draw绘图控件加入Map对象
+                map.addInteraction(draw);
+            }
+        }
+
+        typeSelect.addEventListener('change', () => {
+            // 移除Draw控件
+            map.removeInteraction(draw);
+            addInteraction();
+        })
+        addInteraction();
+        // map.on("click", (e) => {
+        //     // console.log(e.coordinate);
+        //     console.log(ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326"));
+        // });
+
+        // 实现高亮
+        // let selectClick = new ol.interaction.Select({
+        //     condition: ol.events.condition.click, // 事件类型
+        //     style: new ol.style.Style({  // 点击后的样式
+        //         stroke: new ol.style.Stroke({
+        //             color: 'rgba(134, 199, 243,1)',
+        //             // lineDash: [5],
+        //             width: 1
+        //         }),
+        //         fill: new ol.style.Fill({
+        //             color: "rgba(134, 199, 243, 0.3)", //填充颜色
+        //         }),
+        //     }),
+
+        // });
+        // map.addInteraction(selectClick);
+    </script>
+</body>
+
+</html>
